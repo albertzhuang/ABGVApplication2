@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "629454564514",
+    "firebase_url": "https://abgvapplication.firebaseio.com",
+    "project_id": "abgvapplication",
+    "storage_bucket": "abgvapplication.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:629454564514:android:c9d4c7af63d3f493",
+        "android_client_info": {
+          "package_name": "edu.bluejack162.matchfinder"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "629454564514-qfhdhb3u78ktu5nmsfvc94fki3p3gpcq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "edu.bluejack162.matchfinder",
+            "certificate_hash": "887e5e0a6fb70eae54202954d2a69758aa475977"
+          }
+        },
+        {
+          "client_id": "629454564514-67gs9b7knuiup2f4s06eoomp55c24edf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC4j8VsOG0JdPxaEW-yNDae1oCoM5xVFjU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "629454564514-67gs9b7knuiup2f4s06eoomp55c24edf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

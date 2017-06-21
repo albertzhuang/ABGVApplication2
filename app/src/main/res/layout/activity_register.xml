@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="edu.bluejack162.matchfinder.RegisterActivity">
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="24dp"
+        android:textSize="22dp"
+        android:text="Register" />
+
+    <EditText
+        android:id="@+id/usernameTxtId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView3"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="41dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text=""
+        android:hint="Username"/>
+
+    <EditText
+        android:id="@+id/emailTxtId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/usernameTxtId"
+        android:layout_below="@+id/usernameTxtId"
+        android:layout_marginTop="33dp"
+        android:ems="10"
+        android:inputType="textEmailAddress"
+        android:text=""
+        android:hint="Email"/>
+
+    <EditText
+        android:id="@+id/passwordTxtId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/emailTxtId"
+        android:layout_centerVertical="true"
+        android:ems="10"
+        android:inputType="textPassword"
+        android:text=""
+        android:hint="Password"/>
+
+    <Button
+        android:id="@+id/registerBtnId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/passwordTxtId"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="45dp"
+        android:text="Register" />
+</RelativeLayout>
