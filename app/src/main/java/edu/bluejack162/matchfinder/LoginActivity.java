@@ -65,7 +65,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         loginWithFbBtn = (LoginButton) findViewById(R.id.loginFaceboockBtnId);
         callBackManager = CallbackManager.Factory.create();
         loginWithFbBtn.setReadPermissions(Arrays.asList("public_profile","email","user_birthday"));
-
+        //test
         //set Onclic Listener
         loginBtn.setOnClickListener(this);
         registerTxtBtn.setOnClickListener(this);
