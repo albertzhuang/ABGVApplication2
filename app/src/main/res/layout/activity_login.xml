@@ -51,20 +51,32 @@
         android:layout_centerHorizontal="true" />
 
     <com.facebook.login.widget.LoginButton
+        android:id="@+id/loginFaceboockBtnId"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_below="@+id/loginBtnId"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp"
-        android:id="@+id/loginFaceboockBtnId" />
+        android:layout_marginTop="16dp" />
+
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/loginGoogleBtnId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/loginFaceboockBtnId"
+        android:layout_marginTop="13dp"
+        android:layout_alignEnd="@+id/loginFaceboockBtnId"
+        android:layout_alignStart="@+id/loginFaceboockBtnId">
+    </com.google.android.gms.common.SignInButton>
+
 
     <TextView
         android:id="@+id/registerTxtId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="61dp"
+        android:layout_marginTop="29dp"
         android:textSize="18dp"
         android:text="Not Have Accout ? Sign Up here"
-        android:layout_below="@+id/loginFaceboockBtnId"
+        android:layout_below="@+id/loginGoogleBtnId"
         android:layout_centerHorizontal="true" />
+
 </RelativeLayout>

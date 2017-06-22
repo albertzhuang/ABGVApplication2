@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="edu.bluejack162.matchfinder">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -11,10 +11,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <!-- Start Main Activity ! -->
-        <activity android:name=".MainActivity">
 
-        </activity>
+        <!-- Start Main Activity ! -->
+        <activity android:name=".MainActivity"></activity>
         <!-- End Main Activity ! -->
 
 
@@ -28,14 +27,18 @@
         </activity>
         <!-- End Login Activity ! -->
 
-        <!-- Start Register Activity ! -->
-        <activity android:name=".RegisterActivity">
 
-        </activity>
+        <!-- Start Register Activity ! -->
+        <activity android:name=".RegisterActivity"></activity>
         <!-- End Register Activity ! -->
 
+
         <!-- Faceboock meta-data ! -->
-        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+
+        <activity android:name=".AccountActivity"></activity>
     </application>
 
 </manifest>
