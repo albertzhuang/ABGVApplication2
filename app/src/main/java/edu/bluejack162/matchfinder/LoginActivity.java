@@ -1,6 +1,8 @@
 package edu.bluejack162.matchfinder;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
 import android.nfc.Tag;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -57,6 +59,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     static final int RC_SIGN_IN = 1;
 
     static final String TAG = "LOGIN_ACTIVITY";
+    String idLogin;
+    String mCustomeToken;
+    String email;
+
 
     GoogleApiClient mGoogleApiClient;
 
@@ -85,6 +91,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     String emailFacebook;
     String nameFacebook;
+
+    Users userFacebook;
+    Users userGoogle;
 
 
     @Override
@@ -116,9 +125,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 if(firebaseAuth.getCurrentUser()!=null)
                 {
-                    //direct to Account Activit
-                    Intent intent = new Intent(getApplicationContext(),AccountActivity.class);
-                    startActivity(intent);
+                    FirebaseUser userLogin = firebaseAuth.getCurrentUser();
+                    if (userLogin != null) {
+                        // User is signed in
+                        Log.d(TAG, "onAuthStateChanged:signed_in:" + userLogin.getUid());
+                        //Intent intent = new Intent(getApplicationContext(),AccountActivity.class);
+                        //startActivity(intent);
+                    } else {
+                        // User is signed out
+                        Log.d(TAG, "onAuthStateChanged:signed_out");
+                    }
                 }
             }
         };
@@ -129,6 +145,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onStart();
         mAuth.addAuthStateListener(mAuthListener);
     }
+
+
 
     public void init()
     {
@@ -154,9 +172,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         loginWithFbBtn.registerCallback(callBackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                Toast.makeText(LoginActivity.this, "Login success ", Toast.LENGTH_SHORT).show();
+                //Login Success
                 setFacebookData(loginResult);
-                handleFacebookAccessToken(loginResult.getAccessToken());
             }
 
             @Override
@@ -175,7 +192,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View v) {
         if(v == loginBtn)
         {
-            String username = usernameTxt.getText().toString();
+            final String username = usernameTxt.getText().toString();
             final String password = passwordTxt.getText().toString();
             if(username.equals(""))
             {
@@ -195,16 +212,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         {
                             Toast.makeText(LoginActivity.this, "User not Exists", Toast.LENGTH_SHORT).show();
                         }
-                        for(DataSnapshot userSnapShot : dataSnapshot.getChildren())
+                        else
                         {
-                            Users user = userSnapShot.getValue(Users.class);
-                            if(!password.equals(user.getPassword()))
-                            {
-                                Toast.makeText(LoginActivity.this, "Username and Password Invalid", Toast.LENGTH_SHORT).show();
-                            }
-                            else
-                            {
-                                Toast.makeText(LoginActivity.this, "Welcome " + user.getUsername(), Toast.LENGTH_SHORT).show();
+                            for (DataSnapshot userSnapShot : dataSnapshot.getChildren()) {
+                                Users user = userSnapShot.getValue(Users.class);
+                                if (!password.equals(user.getPassword())) {
+                                    Toast.makeText(LoginActivity.this, "Username and Password Invalid", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    createSession(user.getUsername(), user.getEmail());
+                                    Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+                                    startActivity(intent);
+                                }
                             }
                         }
                     }
@@ -226,6 +244,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             signIn();
         }
     }
+
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -268,7 +288,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             Log.d(TAG, "signInWithCredential:success");
                             userGoogleAcc = mAuth.getCurrentUser();
 
-                            final Query query = dataBaseReference.child("usersWithGoogle").orderByChild("email").equalTo(userGoogleAcc.getEmail());
+                            final Query query = dataBaseReference.child("users").orderByChild("email").equalTo(userGoogleAcc.getEmail());
                             query.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -276,9 +296,20 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                     {
                                         //insertData to usersWithGoogle
                                         String id = dataBaseReference.push().getKey();
-                                        Users user = new Users(userGoogleAcc.getDisplayName(),userGoogleAcc.getEmail(),"");
-                                        dataBaseReference.child("usersWithGoogle").child(id).setValue(user);
+                                        userGoogle = new Users(userGoogleAcc.getDisplayName(),userGoogleAcc.getEmail(),"");
+                                        dataBaseReference.child("users").child(id).setValue(userGoogle);
                                     }
+                                    else
+                                    {
+                                        //data already exists
+                                        for (DataSnapshot userSnapShot : dataSnapshot.getChildren()) {
+                                            userGoogle = userSnapShot.getValue(Users.class);
+                                        }
+                                    }
+                                    createSession(userGoogle.getUsername(),userGoogle.getEmail());
+                                    LoginManager.getInstance().logOut();
+                                    Intent intent = new Intent(getApplicationContext(),AccountActivity.class);
+                                    startActivity(intent);
                                 }
                                 @Override
                                 public void onCancelled(DatabaseError databaseError) {
@@ -296,58 +327,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 });
     }
 
-    private void handleFacebookAccessToken(AccessToken token) {
-        Log.d(TAG, "handleFacebookAccessToken:" + token);
 
-        AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithCredential:success");
-                            userFacebokAcc = mAuth.getCurrentUser();
-
-                            //check User
-                            /*final Query query = dataBaseReference.child("usersWithFacebook").orderByChild("email").equalTo(userFacebokAcc.getEmail());
-                            query.addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    if(dataSnapshot.getChildrenCount() < 1)
-                                    {
-                                        //insertData to usersWithGoogle
-                                        String id = dataBaseReference.push().getKey();
-                                        Users user = new Users(userFacebokAcc.getDisplayName(),userFacebokAcc.getEmail(),"");
-                                        dataBaseReference.child("usersWithGoogle").child(id).setValue(user);
-                                    }
-                                }
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-
-                                }
-                            });*/
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithCredential:failure", task.getException());
-                            Toast.makeText(LoginActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-
-                        }
-                        // ...
-                    }
-                });
-    }
 
     private void setFacebookData(final LoginResult loginResult)
     {
-        Toast.makeText(this, "TEST", Toast.LENGTH_SHORT).show();
         GraphRequest request = GraphRequest.newMeRequest(
                 loginResult.getAccessToken(),
                 new GraphRequest.GraphJSONObjectCallback() {
                     @Override
                     public void onCompleted(JSONObject object, GraphResponse response) {
-                        // Application code
                         try {
                             Log.i("Response",response.toString());
 
@@ -357,28 +345,41 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                             Profile profile = Profile.getCurrentProfile();
                             String id = profile.getId();
-                            String link = profile.getLinkUri().toString();
+                            final String link = profile.getLinkUri().getEncodedQuery() .toString();
+                            Toast.makeText(LoginActivity.this,"Link :  " +link, Toast.LENGTH_SHORT).show();
                             Log.i("Link",link);
                             if (Profile.getCurrentProfile()!=null)
                             {
                                 Log.i("Login", "ProfilePic" + Profile.getCurrentProfile().getProfilePictureUri(200, 200));
                             }
+                            final Uri profileFacebook = Profile.getCurrentProfile().getProfilePictureUri(200,200);
 
-                            //set Auth
-                            //userFacebokAcc = mAuth.getCurrentUser();
-                            //check User
-                            final Query query = dataBaseReference.child("usersWithFacebook").orderByChild("email").equalTo(emailFacebook);
+                            final Query query = dataBaseReference.child("users").orderByChild("email").equalTo(emailFacebook);
                             query.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
+
                                     if(dataSnapshot.getChildrenCount() < 1)
                                     {
                                         //insertData to usersWithFaceboock
                                         String newId = dataBaseReference.push().getKey();
-                                        Users user = new Users(nameFacebook,emailFacebook,"");
-                                        dataBaseReference.child("usersWithFacebook").child(newId).setValue(user);
-                                        Toast.makeText(LoginActivity.this, "Success Insert with facebook", Toast.LENGTH_SHORT).show();
+                                        String newLink = profileFacebook.getEncodedSchemeSpecificPart().toString();
+                                        userFacebook = new Users(nameFacebook,emailFacebook,"",link);
+
+                                        //userFacebook.setProfileFacebook(profileFacebook);
+
+                                        dataBaseReference.child("users").child(newId).setValue(userFacebook);
                                     }
+                                    else
+                                    {
+                                        for (DataSnapshot userSnapShot : dataSnapshot.getChildren()) {
+                                            userFacebook = userSnapShot.getValue(Users.class);
+                                        }
+                                    }
+                                    createSession(userFacebook.getUsername(),userFacebook.getEmail());
+                                    LoginManager.getInstance().logOut();
+                                    Intent intent = new Intent(getApplicationContext(),HomeActivity.class);
+                                    startActivity(intent);
                                 }
                                 @Override
                                 public void onCancelled(DatabaseError databaseError) {
@@ -386,31 +387,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 }
                             });
 
-                            LoginManager.getInstance().logOut();
 
-                            //Toast.makeText(LoginActivity.this, name, Toast.LENGTH_SHORT).show();
-                            /*String firstName = response.getJSONObject().getString("first_name");
-                            String lastName = response.getJSONObject().getString("last_name");
-                            String gender = response.getJSONObject().getString("gender");*/
-
-                            /*Profile profile = Profile.getCurrentProfile();
-                            String id = profile.getId();
-                            String link = profile.getLinkUri().toString();
-                            Log.i("Link",link);
-                            if (Profile.getCurrentProfile()!=null)
-                            {
-                                Log.i("Login", "ProfilePic" + Profile.getCurrentProfile().getProfilePictureUri(200, 200));
-                            }*/
-
-
-
-
-
-
-                            /*Log.i("Login" + "Email", email);
-                            Log.i("Login"+ "FirstName", firstName);
-                            Log.i("Login" + "LastName", lastName);
-                            Log.i("Login" + "Gender", gender);*/
+                            //Sign Out Facebook account
 
 
                         } catch (JSONException e) {
@@ -425,4 +403,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         request.executeAsync();
     }
 
+    public void createSession(String username,String email)
+    {
+        SharedPreferences sharedPref = getSharedPreferences("userSession",MODE_PRIVATE);
+
+        SharedPreferences.Editor editor =  sharedPref.edit();
+        editor.putString("username",username);
+        editor.putString("email",email);
+        editor.apply();
+    }
 }

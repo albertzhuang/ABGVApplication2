@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Sportastig.iml" filepath="$PROJECT_DIR$/Sportastig.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ABGVApplication.iml" filepath="$PROJECT_DIR$/ABGVApplication.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
