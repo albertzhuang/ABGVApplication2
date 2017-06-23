@@ -68,10 +68,12 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         //profileImage.setImageURI();
         if(checkSession())
         {
+
             //imageUrl= "https://scontent.xx.fbcdn.net/v/t1.0-1/c218.42.525.525/s200x200/935636_632221070139234_247860387_n.jpg?oh=c26181b3d31aa36ce4df3da36aa9c5a5&oe=59DE78DF";
-            imageUrl = userLogin.getProfileImage();
-            //imageUrl = "//graph.facebook.com/1744223575605639/picture?type=square";
-            new DownLoadImageTask(profileImage).execute(imageUrl);
+            //Toast.makeText(this, userLogin.getEmail(), Toast.LENGTH_SHORT).show();
+            //imageUrl = userLogin.getProfileImage();
+            //imageUrl = "http://graph.facebook.com/1744223575605639/picture?type=large";
+
         }
     }
 
@@ -94,6 +96,8 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+
+
     private class DownLoadImageTask extends AsyncTask<String,Void,Bitmap> {
         ImageView imageView;
 
@@ -105,28 +109,29 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             doInBackground(Params... params)
                 Override this method to perform a computation on a background thread.
          */
-        protected Bitmap doInBackground(String...urls){
-            String urlOfImage = urls[0];
-            URL url = null;
-            Bitmap logo = null;
-            try{
-                InputStream is = new URL(urlOfImage).openStream();
-                /*
-                    decodeStream(InputStream is)
-                        Decode an input stream into a bitmap.
-                 */
-                logo = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-            }catch(Exception e){ // Catch the download exception
+        protected Bitmap doInBackground(String... urls) {
+            String urldisplay = urls[0];
+            Bitmap mIcon11 = null;
+            try {
+                InputStream in = new java.net.URL(urldisplay).openStream();
+                //mIcon11 = BitmapFactory.decodeStream(in);
+                mIcon11 = BitmapFactory.decodeStream((InputStream)new URL(urldisplay).getContent());
+            } catch (Exception e) {
+                Log.e("Error", e.getMessage());
                 e.printStackTrace();
             }
-            return logo;
+            return mIcon11;
         }
 
         /*
             onPostExecute(Result result)
                 Runs on the UI thread after doInBackground(Params...).
          */
-        protected void onPostExecute(Bitmap result){
+
+        @Override
+        protected void onPostExecute(Bitmap result) {
+            super.onPostExecute(result);
+            //pd.dismiss();
             imageView.setImageBitmap(result);
         }
     }
@@ -141,6 +146,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         {
             return false;
         }
+        Toast.makeText(this, username + " " + email, Toast.LENGTH_SHORT).show();
         selectLoginUser(username,email);
         return true;
     }
@@ -152,8 +158,18 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot userSnapShot : dataSnapshot.getChildren()) {
-                    userLogin = userSnapShot.getValue(Users.class);
+                if(dataSnapshot.getChildrenCount() < 1)
+                {
+                    Toast.makeText(HomeActivity.this, "Select Failed", Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    for (DataSnapshot userSnapShot : dataSnapshot.getChildren()) {
+                        userLogin = userSnapShot.getValue(Users.class);
+                        imageUrl = userLogin.getProfileImage();
+                        //Toast.makeText(HomeActivity.this, userLogin.getProfileImage() + " TEST", Toast.LENGTH_SHORT).show();
+                        new DownLoadImageTask(profileImage).execute(imageUrl);
+                    }
                 }
             }
             @Override
@@ -161,6 +177,5 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
             }
         });
-
     }
 }

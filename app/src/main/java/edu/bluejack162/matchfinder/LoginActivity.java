@@ -21,6 +21,7 @@ import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
 import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
@@ -62,7 +63,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     String idLogin;
     String mCustomeToken;
     String email;
-
+    String newLink;
 
     GoogleApiClient mGoogleApiClient;
 
@@ -331,6 +332,26 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private void setFacebookData(final LoginResult loginResult)
     {
+
+        Bundle params = new Bundle();
+        params.putString("fields", "id,email,gender,cover,picture.type(large)");
+        new GraphRequest(AccessToken.getCurrentAccessToken(), "me", params, HttpMethod.GET,
+                new GraphRequest.Callback() {
+                    @Override
+                    public void onCompleted(GraphResponse response) {
+                        if (response != null) {
+                            try {
+                                JSONObject data = response.getJSONObject();
+                                if (data.has("picture")) {
+                                    newLink = data.getJSONObject("picture").getJSONObject("data").getString("url");
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }).executeAsync();
+
         GraphRequest request = GraphRequest.newMeRequest(
                 loginResult.getAccessToken(),
                 new GraphRequest.GraphJSONObjectCallback() {
@@ -345,14 +366,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                             Profile profile = Profile.getCurrentProfile();
                             String id = profile.getId();
-                            final String link = profile.getLinkUri().getEncodedQuery() .toString();
+                            final String link = profile.getLinkUri().toString();
                             Toast.makeText(LoginActivity.this,"Link :  " +link, Toast.LENGTH_SHORT).show();
                             Log.i("Link",link);
                             if (Profile.getCurrentProfile()!=null)
                             {
                                 Log.i("Login", "ProfilePic" + Profile.getCurrentProfile().getProfilePictureUri(200, 200));
                             }
-                            final Uri profileFacebook = Profile.getCurrentProfile().getProfilePictureUri(200,200);
 
                             final Query query = dataBaseReference.child("users").orderByChild("email").equalTo(emailFacebook);
                             query.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -363,8 +383,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                     {
                                         //insertData to usersWithFaceboock
                                         String newId = dataBaseReference.push().getKey();
-                                        String newLink = profileFacebook.getEncodedSchemeSpecificPart().toString();
-                                        userFacebook = new Users(nameFacebook,emailFacebook,"",link);
+                                        //String newLink = profileFacebook.getEncodedSchemeSpecificPart().toString();
+                                        userFacebook = new Users(nameFacebook,emailFacebook,"",newLink);
 
                                         //userFacebook.setProfileFacebook(profileFacebook);
 
@@ -401,6 +421,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         parameters.putString("fields", "id,email,first_name,last_name,gender");
         request.setParameters(parameters);
         request.executeAsync();
+
+
+
     }
 
     public void createSession(String username,String email)
