@@ -64,6 +64,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     String mCustomeToken;
     String email;
     String newLink;
+    String googlePictureLink;
 
     GoogleApiClient mGoogleApiClient;
 
@@ -130,8 +131,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     if (userLogin != null) {
                         // User is signed in
                         Log.d(TAG, "onAuthStateChanged:signed_in:" + userLogin.getUid());
-                        //Intent intent = new Intent(getApplicationContext(),AccountActivity.class);
-                        //startActivity(intent);
                     } else {
                         // User is signed out
                         Log.d(TAG, "onAuthStateChanged:signed_out");
@@ -289,6 +288,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             Log.d(TAG, "signInWithCredential:success");
                             userGoogleAcc = mAuth.getCurrentUser();
 
+                            googlePictureLink = userGoogleAcc.getPhotoUrl().toString();
+
+                            Toast.makeText(LoginActivity.this,"Hai : "+googlePictureLink, Toast.LENGTH_SHORT).show();
+                            Log.d("test1",googlePictureLink);
                             final Query query = dataBaseReference.child("users").orderByChild("email").equalTo(userGoogleAcc.getEmail());
                             query.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
@@ -297,7 +300,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                     {
                                         //insertData to usersWithGoogle
                                         String id = dataBaseReference.push().getKey();
-                                        userGoogle = new Users(userGoogleAcc.getDisplayName(),userGoogleAcc.getEmail(),"");
+                                        userGoogle = new Users(userGoogleAcc.getDisplayName(),userGoogleAcc.getEmail(),"",googlePictureLink,"","");
                                         dataBaseReference.child("users").child(id).setValue(userGoogle);
                                     }
                                     else
@@ -309,12 +312,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                     }
                                     createSession(userGoogle.getUsername(),userGoogle.getEmail());
                                     LoginManager.getInstance().logOut();
-                                    Intent intent = new Intent(getApplicationContext(),AccountActivity.class);
+                                    Intent intent = new Intent(getApplicationContext(),UserNavigationActivity.class);
                                     startActivity(intent);
                                 }
                                 @Override
                                 public void onCancelled(DatabaseError databaseError) {
-
+                                    Toast.makeText(LoginActivity.this, "Cancelled", Toast.LENGTH_SHORT).show();
                                 }
                             });
 
@@ -328,11 +331,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 });
     }
 
-
-
     private void setFacebookData(final LoginResult loginResult)
     {
-
+        //Get facebook profileURL picture URL
         Bundle params = new Bundle();
         params.putString("fields", "id,email,gender,cover,picture.type(large)");
         new GraphRequest(AccessToken.getCurrentAccessToken(), "me", params, HttpMethod.GET,
@@ -352,6 +353,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     }
                 }).executeAsync();
 
+
+        //GET credentials facebook account
         GraphRequest request = GraphRequest.newMeRequest(
                 loginResult.getAccessToken(),
                 new GraphRequest.GraphJSONObjectCallback() {
@@ -362,7 +365,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                             emailFacebook = object.getString("email");
                             nameFacebook = object.getString("first_name") + " " + object.getString("last_name");
-                            String gender = response.getJSONObject().getString("gender");
+                            final String gender = response.getJSONObject().getString("gender");
 
                             Profile profile = Profile.getCurrentProfile();
                             String id = profile.getId();
@@ -383,11 +386,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                     {
                                         //insertData to usersWithFaceboock
                                         String newId = dataBaseReference.push().getKey();
-                                        //String newLink = profileFacebook.getEncodedSchemeSpecificPart().toString();
-                                        userFacebook = new Users(nameFacebook,emailFacebook,"",newLink);
-
-                                        //userFacebook.setProfileFacebook(profileFacebook);
-
+                                        userFacebook = new Users(nameFacebook,emailFacebook,"",newLink,gender,"");
                                         dataBaseReference.child("users").child(newId).setValue(userFacebook);
                                     }
                                     else
@@ -398,7 +397,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                     }
                                     createSession(userFacebook.getUsername(),userFacebook.getEmail());
                                     LoginManager.getInstance().logOut();
-                                    Intent intent = new Intent(getApplicationContext(),HomeActivity.class);
+                                    Intent intent = new Intent(getApplicationContext(),UserNavigationActivity.class);
                                     startActivity(intent);
                                 }
                                 @Override
@@ -406,14 +405,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                                 }
                             });
-
-
                             //Sign Out Facebook account
-
-
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            Toast.makeText(LoginActivity.this, e+"", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this, e.toString(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -421,9 +416,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         parameters.putString("fields", "id,email,first_name,last_name,gender");
         request.setParameters(parameters);
         request.executeAsync();
-
-
-
     }
 
     public void createSession(String username,String email)

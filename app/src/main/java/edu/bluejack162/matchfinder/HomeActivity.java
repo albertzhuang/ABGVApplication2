@@ -62,10 +62,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
         uploadBtn.setOnClickListener(this);
 
-
-        //Bitmap bitmap = loadBitmap("https://scontent-sin6-1.xx.fbcdn.net/v/t1.0-9/935636_632221070139234_247860387_n.jpg?oh=0f9b4f83187089db06db4a7056548044&oe=59D9E969");
-        //profileImage.setImageBitmap(bitmap);
-        //profileImage.setImageURI();
         if(checkSession())
         {
 
@@ -167,7 +163,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                     for (DataSnapshot userSnapShot : dataSnapshot.getChildren()) {
                         userLogin = userSnapShot.getValue(Users.class);
                         imageUrl = userLogin.getProfileImage();
-                        //Toast.makeText(HomeActivity.this, userLogin.getProfileImage() + " TEST", Toast.LENGTH_SHORT).show();
                         new DownLoadImageTask(profileImage).execute(imageUrl);
                     }
                 }

@@ -66,17 +66,12 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             else
             {
                 String id =dataBaseReference.push().getKey();
-                user = new Users(username,email,password);
+                user = new Users(username,email,password,"","","");
                 dataBaseReference.child("users").child(id).setValue(user);
                 Intent intent = new Intent(getApplicationContext(),LoginActivity.class);
                 Toast.makeText(this, "Register Success", Toast.LENGTH_SHORT).show();
                 startActivity(intent);
             }
-
-            /*if(checkEmpty())
-            {
-
-            }*/
         }
     }
 

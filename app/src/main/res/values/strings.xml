@@ -1,4 +1,25 @@
 <resources>
     <string name="app_name">ABGVApplication</string>
     <string name="facebook_app_id">310833302676062</string>
+    <string name="title_activity_user_navigation">UserNavigationActivity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="action_settings">Settings</string>
+    <string-array name="gender_array">
+        <item>Gender</item>
+        <item>male</item>
+        <item>female</item>
+    </string-array>
+
+    <string-array name="favorite_sport_array">
+        <item>favorite Sport</item>
+        <item>soccer</item>
+        <item>basket</item>
+        <item>tenis</item>
+    </string-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
 </resources>
