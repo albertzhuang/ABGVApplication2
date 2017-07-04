@@ -122,6 +122,4 @@ public class Users {
         result.put("favoriteSport", favoriteSport);
         return result;
     }
-
 }
-
