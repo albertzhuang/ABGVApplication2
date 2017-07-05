@@ -1,4 +1,4 @@
-package edu.bluejack162.matchfinder;
+package edu.bluejack162.matchfinder.model;
 
 import android.net.Uri;
 
@@ -19,6 +19,15 @@ public class Users {
     private Uri profileFacebook;
     private String gender;
     private String favoriteSport;
+    private String userId;
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
     public String getGender() {
         return gender;

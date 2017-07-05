@@ -33,6 +33,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import edu.bluejack162.matchfinder.model.Users;
 
 
 /**

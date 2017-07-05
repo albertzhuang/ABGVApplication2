@@ -1,7 +1,6 @@
-package edu.bluejack162.matchfinder;
+package edu.bluejack162.matchfinder.activity;
 
 import android.content.Intent;
-import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -12,6 +11,9 @@ import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import edu.bluejack162.matchfinder.R;
+import edu.bluejack162.matchfinder.model.Users;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener{
 

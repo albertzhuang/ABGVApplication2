@@ -1,9 +1,7 @@
-package edu.bluejack162.matchfinder;
+package edu.bluejack162.matchfinder.activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
-import android.nfc.Tag;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -33,12 +31,10 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
@@ -56,6 +52,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import edu.bluejack162.matchfinder.HomeActivity;
+import edu.bluejack162.matchfinder.R;
+import edu.bluejack162.matchfinder.model.Users;
+
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
 
     static final int RC_SIGN_IN = 1;
@@ -66,6 +66,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     String email;
     String newLink;
     String googlePictureLink;
+    String userId;
 
     GoogleApiClient mGoogleApiClient;
 
@@ -216,10 +217,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         {
                             for (DataSnapshot userSnapShot : dataSnapshot.getChildren()) {
                                 Users user = userSnapShot.getValue(Users.class);
+                                userId = userSnapShot.getKey();
                                 if (!password.equals(user.getPassword())) {
                                     Toast.makeText(LoginActivity.this, "Username and Password Invalid", Toast.LENGTH_SHORT).show();
                                 } else {
-                                    createSession(user.getUsername(), user.getEmail());
+                                    createSession(userId,user.getUsername(), user.getEmail());
                                     Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
                                     startActivity(intent);
                                 }
@@ -308,9 +310,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                         //data already exists
                                         for (DataSnapshot userSnapShot : dataSnapshot.getChildren()) {
                                             userGoogle = userSnapShot.getValue(Users.class);
+                                            userId = userSnapShot.getKey();
                                         }
                                     }
-                                    createSession(userGoogle.getUsername(),userGoogle.getEmail());
+                                    createSession(userId,userGoogle.getUsername(),userGoogle.getEmail());
                                     LoginManager.getInstance().logOut();
                                     Intent intent = new Intent(getApplicationContext(),UserNavigationActivity.class);
                                     startActivity(intent);
@@ -393,9 +396,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                     {
                                         for (DataSnapshot userSnapShot : dataSnapshot.getChildren()) {
                                             userFacebook = userSnapShot.getValue(Users.class);
+                                            userId = userSnapShot.getKey();
                                         }
                                     }
-                                    createSession(userFacebook.getUsername(),userFacebook.getEmail());
+                                    createSession(userId,userFacebook.getUsername(),userFacebook.getEmail());
                                     LoginManager.getInstance().logOut();
                                     Intent intent = new Intent(getApplicationContext(),UserNavigationActivity.class);
                                     startActivity(intent);
@@ -418,11 +422,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         request.executeAsync();
     }
 
-    public void createSession(String username,String email)
+    public void createSession(String userId,String username,String email)
     {
         SharedPreferences sharedPref = getSharedPreferences("userSession",MODE_PRIVATE);
 
         SharedPreferences.Editor editor =  sharedPref.edit();
+        editor.putString("userID",userId);
         editor.putString("username",username);
         editor.putString("email",email);
         editor.apply();

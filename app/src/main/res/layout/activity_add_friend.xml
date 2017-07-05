@@ -1,9 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="edu.bluejack162.matchfinder.AddFriendActivity">
+    tools:context="edu.bluejack162.matchfinder.activity.AddFriendActivity">
 
-</android.support.constraint.ConstraintLayout>
+    <EditText
+        android:id="@+id/searchTxtId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="19dp"
+        android:layout_marginRight="100dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="Enter Username"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <RelativeLayout
+        android:id="@+id/relativeLayoutId"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginTop="30dp"
+        android:visibility="visible"
+        android:layout_below="@+id/searchTxtId"
+        android:layout_alignParentStart="true">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profileImageId"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:visibility="gone"/>
+
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/addFriendBtnId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Friend"
+        android:visibility="gone"
+        android:layout_alignBottom="@+id/relativeLayoutId"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:id="@+id/usernameTxtId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/addFriendBtnId"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="13dp"
+        android:text=""
+        android:textSize="26dp"
+        android:visibility="gone"/>
+
+    <ListView
+        android:id="@+id/friendListId"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/relativeLayoutId" />
+
+
+</RelativeLayout>

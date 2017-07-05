@@ -32,7 +32,7 @@
 
 
         <!-- Start Login Activity ! -->
-        <activity android:name=".LoginActivity">
+        <activity android:name=".activity.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -43,11 +43,11 @@
 
 
         <!-- Start Register Activity ! -->
-        <activity android:name=".RegisterActivity" />
+        <activity android:name=".activity.RegisterActivity" />
         <!-- End Register Activity ! -->
 
         <activity
-            android:name=".UserNavigationActivity"
+            android:name=".activity.UserNavigationActivity"
             android:label="@string/title_activity_user_navigation"
             android:theme="@style/AppTheme.NoActionBar" />
 
@@ -74,7 +74,7 @@
             android:name=".TestActivity"
             android:label="@string/title_activity_test"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".AddFriendActivity"></activity>
+        <activity android:name=".activity.AddFriendActivity"></activity>
     </application>
 
 </manifest>

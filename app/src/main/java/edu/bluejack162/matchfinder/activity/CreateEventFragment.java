@@ -1,4 +1,4 @@
-package edu.bluejack162.matchfinder;
+package edu.bluejack162.matchfinder.activity;
 
 
 import android.content.Intent;
@@ -23,6 +23,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import edu.bluejack162.matchfinder.R;
 
 
 /**

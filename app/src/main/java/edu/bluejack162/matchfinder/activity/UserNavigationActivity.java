@@ -1,14 +1,11 @@
-package edu.bluejack162.matchfinder;
+package edu.bluejack162.matchfinder.activity;
 
 
 import android.content.ClipData;
-import android.content.SharedPreferences;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -17,6 +14,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import edu.bluejack162.matchfinder.ProfileFragment;
+import edu.bluejack162.matchfinder.R;
 
 public class UserNavigationActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -69,6 +69,11 @@ public class UserNavigationActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        }
+        else if(id == R.id.action_friend)
+        {
+            Intent intent = new Intent(getApplicationContext(),AddFriendActivity.class);
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);

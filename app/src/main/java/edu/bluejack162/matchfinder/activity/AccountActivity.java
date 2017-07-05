@@ -1,4 +1,4 @@
-package edu.bluejack162.matchfinder;
+package edu.bluejack162.matchfinder.activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,6 +10,8 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+
+import edu.bluejack162.matchfinder.R;
 
 public class AccountActivity extends AppCompatActivity implements View.OnClickListener{
 

@@ -1,4 +1,4 @@
-package edu.bluejack162.matchfinder;
+package edu.bluejack162.matchfinder.model;
 
 import android.*;
 import android.Manifest;

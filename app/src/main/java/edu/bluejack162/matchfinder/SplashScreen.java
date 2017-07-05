@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import edu.bluejack162.matchfinder.activity.LoginActivity;
+
 public class SplashScreen extends Activity {
 
     Thread splashThread = new Thread(new Runnable() {
