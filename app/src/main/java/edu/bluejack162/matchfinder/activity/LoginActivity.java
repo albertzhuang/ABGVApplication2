@@ -66,7 +66,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     String email;
     String newLink;
     String googlePictureLink;
-    String userId;
+    static String userId;
 
     GoogleApiClient mGoogleApiClient;
 
@@ -292,7 +292,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                             googlePictureLink = userGoogleAcc.getPhotoUrl().toString();
 
-                            Toast.makeText(LoginActivity.this,"Hai : "+googlePictureLink, Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(LoginActivity.this,"Hai : "+googlePictureLink, Toast.LENGTH_SHORT).show();
                             Log.d("test1",googlePictureLink);
                             final Query query = dataBaseReference.child("users").orderByChild("email").equalTo(userGoogleAcc.getEmail());
                             query.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -431,5 +431,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         editor.putString("username",username);
         editor.putString("email",email);
         editor.apply();
+    }
+
+    public static String getUserKey(){
+        return userId;
     }
 }

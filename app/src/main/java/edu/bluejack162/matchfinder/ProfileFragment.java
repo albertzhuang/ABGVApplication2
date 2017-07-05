@@ -1,12 +1,17 @@
 package edu.bluejack162.matchfinder;
 
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -18,22 +23,35 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
+//import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import edu.bluejack162.matchfinder.activity.LoginActivity;
 import edu.bluejack162.matchfinder.model.Users;
+
+import static android.app.Activity.RESULT_OK;
 
 
 /**
@@ -42,6 +60,7 @@ import edu.bluejack162.matchfinder.model.Users;
 
 public class ProfileFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemSelectedListener{
 
+    TextView changePhoto;
     Button buttonUpdate;
     Users userLogIn;
     DatabaseReference databaseReference;
@@ -49,6 +68,10 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, A
     CircleImageView profileImage;
     Spinner genderSpinner,favoriteSportSpinner;
     ArrayAdapter<CharSequence> genderAdapter, favoriteSportAdapter;
+    private static final int PICK_IMAGE_REQUEST = 101;
+    private Uri filePath;
+    private StorageReference storageReference;
+    private DatabaseReference dbUser;
 
     @Nullable
     @Override
@@ -131,13 +154,17 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, A
         favoriteSportSpinner.setAdapter(favoriteSportAdapter);
 
         buttonUpdate = (Button) getActivity().findViewById(R.id.updateBtnId);
+        changePhoto = (TextView) getActivity().findViewById(R.id.changePhoto);
+        storageReference = FirebaseStorage.getInstance().getReference();
+        dbUser = databaseReference.child("users");
 
         //set Listener
         usernameTxt.setOnClickListener(this);
         buttonUpdate.setOnClickListener(this);
         genderSpinner.setOnItemSelectedListener(this);
         favoriteSportSpinner.setOnItemSelectedListener(this);
-
+        changePhoto.setOnClickListener(this);
+        profileImage.setOnClickListener(this);
         //onStart
         start();
     }
@@ -215,6 +242,11 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, A
             });
             buttonUpdate.setEnabled(false);
         }
+        else if(v == changePhoto || v == profileImage){
+            //change photo in user
+            //open file chooser
+            showFileChooser();
+        }
     }
 
     @Override
@@ -227,6 +259,97 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, A
 
     }
 
+    //FILE CHOOSER
+    private void showFileChooser(){
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select an Image"),PICK_IMAGE_REQUEST);
+    }
+
+    //UPLOADING THE CHANGED PHOTO
+    private void uploadingFile(Bitmap bitmap){
+        if(filePath != null) {
+            final Bitmap newImg = bitmap;
+            final ProgressDialog progress = new ProgressDialog(getContext());
+            progress.setTitle("Uploading file...");
+            progress.show();
+
+            final StorageReference riversRef = storageReference.child("images/profile"+LoginActivity.getUserKey()+".jpg");
+
+            riversRef.putFile(filePath)
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            // Get a URL to the uploaded content
+                            progress.dismiss();
+                            //Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                            //Glide.with(getContext()).load(riversRef.getDownloadUrl()).centerCrop().into(profileImage);
+
+                            Toast.makeText(getContext(), "File Uploaded", Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(getContext(), "", Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(getContext(), LoginActivity.getUserKey(), Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(getContext(), riversRef.getStream().toString(), Toast.LENGTH_SHORT).show();
+                            updateProfileImage();
+                            profileImage.setImageBitmap(newImg);
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            // Handle unsuccessful uploads
+                            // ...
+                            progress.dismiss();
+                            Toast.makeText(getContext(), exception.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                            double progressPtg = (100.0 * taskSnapshot.getBytesTransferred()/taskSnapshot.getTotalByteCount());
+                            progress.setMessage(((int)progressPtg)+" %");
+                        }
+                    });
+        }
+        else{
+            //display error no file
+            Toast.makeText(getContext(), "No file chosen", Toast.LENGTH_SHORT).show();
+
+        }
+    }
+
+    private void updateProfileImage(){
+        storageReference.child("images/profile"+ LoginActivity.getUserKey()+".jpg").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                //Toast.makeText(getContext(), "new link"+uri, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getContext(), dbUser.child(LoginActivity.getUserKey()).child("username").getParent().toString(), Toast.LENGTH_SHORT).show();
+                dbUser.child(LoginActivity.getUserKey().toString()).child("profileImage").setValue(uri.toString());
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getContext(), "Error update profile image", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null ){
+            filePath = data.getData();
+
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), filePath);
+                uploadingFile(bitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
 
     private class DownLoadImageTask extends AsyncTask<String,Void,Bitmap> {
         CircleImageView imageView;
