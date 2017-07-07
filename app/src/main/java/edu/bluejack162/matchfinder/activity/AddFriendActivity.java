@@ -1,6 +1,7 @@
 package edu.bluejack162.matchfinder.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -161,7 +162,8 @@ public class AddFriendActivity extends AppCompatActivity implements View.OnKeyLi
                 selectUser(search,userLogin.getUserId());
                 break;
             case KeyEvent.KEYCODE_BACK:
-                Toast.makeText(this, "test", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getApplicationContext(),UserNavigationActivity.class);
+                startActivity(intent);
                 break;
         }
         return true;
@@ -268,7 +270,6 @@ public class AddFriendActivity extends AppCompatActivity implements View.OnKeyLi
         userLogin.setUserId(userId);
         userLogin.setUsername(username);
         userLogin.setEmail(email);
-
     }
 
     @Override

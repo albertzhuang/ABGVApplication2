@@ -25,7 +25,7 @@
         android:layout_marginTop="30dp"
         android:visibility="visible"
         android:layout_below="@+id/searchTxtId"
-        android:layout_alignParentStart="true">
+        android:layout_toEndOf="@+id/addFriendBtnId">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profileImageId"

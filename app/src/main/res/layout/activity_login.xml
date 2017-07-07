@@ -6,77 +6,146 @@
     android:layout_height="match_parent"
     tools:context="edu.bluejack162.matchfinder.activity.LoginActivity">
 
+
+
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="31dp"
-        android:text="Login"
-        android:textSize="22dp"
+        android:layout_marginTop="71dp"
+        android:text="Sportastig"
+        android:textSize="36dp"
         tools:layout_editor_absoluteX="162dp"
-        tools:layout_editor_absoluteY="27dp" />
+        tools:layout_editor_absoluteY="27dp"
+        android:textColor="@color/colorFont"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
 
     <EditText
         android:id="@+id/usernameTxtId"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView2"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="37dp"
+        android:layout_marginTop="50dp"
         android:ems="10"
         android:inputType="textPersonName"
         android:text=""
-        android:hint="Username"/>
+        android:hint="Username"
+        android:textColor="@color/colorFont"
+        android:layout_below="@+id/textView2"
+        android:layout_centerHorizontal="true"
+        android:padding="8dp"
+        android:background="@drawable/roundfill"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"/>
 
     <EditText
         android:id="@+id/passwordTxtId"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/usernameTxtId"
-        android:layout_below="@+id/usernameTxtId"
-        android:layout_marginTop="38dp"
         android:ems="10"
         android:hint="Password"
         android:inputType="textPassword"
-        android:text="" />
+        android:textColor="@color/colorFont"
+        android:padding="8dp"
+        android:background="@drawable/roundfill"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="15dp"
+        android:layout_below="@+id/usernameTxtId"
+        android:layout_alignStart="@+id/usernameTxtId" />
 
     <Button
         android:id="@+id/loginBtnId"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Login"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_marginRight="30dp"
+        android:layout_marginLeft="30dp"
+        android:background="@drawable/round"
+        android:textColor="@color/colorFont"
+        android:layout_below="@+id/passwordTxtId"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="29dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_below="@+id/loginBtnId"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:orientation="horizontal"
+        android:alpha="0.4"
+        android:id="@+id/linearLayout2">
+
+        <View
+            android:layout_width="130dp"
+            android:layout_height="1dp"
+            android:background="#f3f3f3"
+            android:layout_marginTop="9dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="OR"
+            android:textColor="@color/colorFont"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"/>
+        <View
+            android:layout_width="140dp"
+            android:layout_height="1dp"
+            android:background="#f3f3f3"
+            android:layout_below="@id/loginBtnId"
+            android:layout_marginTop="9dp" />
+    </LinearLayout>
+
 
     <com.facebook.login.widget.LoginButton
         android:id="@+id/loginFaceboockBtnId"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/loginBtnId"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp" />
+        android:background="@color/colorBackground"
+        android:layout_marginRight="50dp"
+        android:layout_marginLeft="50dp"
+        android:textSize="14dp"
+        android:layout_below="@+id/linearLayout2"
+        android:layout_centerHorizontal="true" />
 
-    <com.google.android.gms.common.SignInButton
+
+    <ImageView
+        android:id="@+id/googleIconId"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:src="@drawable/google_icon"
+        android:layout_marginLeft="5dp"
+        android:layout_below="@+id/loginFaceboockBtnId"
+        android:layout_alignStart="@+id/loginFaceboockBtnId"
+        android:layout_marginTop="10dp" />
+    <TextView
         android:id="@+id/loginGoogleBtnId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/loginFaceboockBtnId"
-        android:layout_marginTop="13dp"
+        android:text="Continue With Google"
+        android:textSize="16dp"
+        android:textStyle="bold"
+        android:textAlignment="center"
+        android:textColor="@color/colorFont"
+        android:paddingRight="30dp"
+        android:layout_alignBottom="@+id/googleIconId"
         android:layout_alignEnd="@+id/loginFaceboockBtnId"
-        android:layout_alignStart="@+id/loginFaceboockBtnId">
-    </com.google.android.gms.common.SignInButton>
+        android:layout_toEndOf="@+id/googleIconId"
+        android:paddingLeft="7dp"/>
 
 
     <TextView
         android:id="@+id/registerTxtId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="29dp"
         android:textSize="18dp"
-        android:text="Not Have Accout ? Sign Up here"
-        android:layout_below="@+id/loginGoogleBtnId"
-        android:layout_centerHorizontal="true" />
+        android:text="Don't Have Accout ? Sign Up here"
+        android:textColor="@color/colorFont"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="16dp" />
+
 
 </RelativeLayout>

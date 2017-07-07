@@ -13,43 +13,52 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="24dp"
-        android:textSize="22dp"
-        android:text="Register" />
+        android:textSize="36dp"
+        android:text="Register"
+        android:textColor="@color/colorFont"/>
 
     <EditText
         android:id="@+id/usernameTxtId"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/textView3"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="41dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text=""
-        android:hint="Username"/>
+        android:background="@drawable/roundfill"
+        android:hint="Username"
+        android:padding="8dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"/>
 
     <EditText
         android:id="@+id/emailTxtId"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/usernameTxtId"
         android:layout_below="@+id/usernameTxtId"
-        android:layout_marginTop="33dp"
+        android:layout_marginTop="30dp"
         android:ems="10"
         android:inputType="textEmailAddress"
-        android:text=""
-        android:hint="Email"/>
+        android:hint="Email"
+        android:background="@drawable/roundfill"
+        android:padding="8dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"/>
 
     <EditText
         android:id="@+id/passwordTxtId"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/emailTxtId"
-        android:layout_centerVertical="true"
+        android:layout_marginTop="30dp"
         android:ems="10"
         android:inputType="textPassword"
-        android:text=""
-        android:hint="Password"/>
+        android:hint="Password"
+        android:background="@drawable/roundfill"
+        android:padding="8dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_below="@+id/emailTxtId" />
 
     <Button
         android:id="@+id/registerBtnId"
@@ -58,5 +67,11 @@
         android:layout_below="@+id/passwordTxtId"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="45dp"
-        android:text="Register" />
+        android:text="Sign Up"
+        android:textStyle="bold"
+        android:background="@drawable/oval"
+        android:textColor="@color/colorFont"
+        android:textSize="20dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"/>
 </RelativeLayout>

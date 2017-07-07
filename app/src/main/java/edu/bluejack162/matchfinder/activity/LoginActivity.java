@@ -47,6 +47,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -84,7 +85,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     CallbackManager callBackManager;
 
-    SignInButton loginGoogleBtn;
+    TextView loginGoogleBtn;
 
     FirebaseAuth mAuth;
 
@@ -162,8 +163,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         loginWithFbBtn.setReadPermissions(Arrays.asList("email","public_profile","user_birthday"));
 
-        loginGoogleBtn = (SignInButton) findViewById(R.id.loginGoogleBtnId);
+        loginGoogleBtn = (TextView) findViewById(R.id.loginGoogleBtnId);
         mAuth = FirebaseAuth.getInstance();
+        //setGooglePlusButtonText(loginGoogleBtn,"Continue With Google");
 
         //set Onclic Listener
         loginBtn.setOnClickListener(this);
@@ -436,4 +438,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public static String getUserKey(){
         return userId;
     }
+
+
+    protected void setGooglePlusButtonText(SignInButton signInButton, String buttonText) {
+        for (int i = 0; i < signInButton.getChildCount(); i++) {
+            View v = signInButton.getChildAt(i);
+            if (v instanceof TextView) {
+                TextView tv = (TextView) v;
+                tv.setText(buttonText);
+                return;
+            }
+        }
+    }
+
 }
