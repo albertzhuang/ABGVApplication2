@@ -25,8 +25,11 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import edu.bluejack162.matchfinder.R;
 import edu.bluejack162.matchfinder.model.Event;
@@ -41,9 +44,11 @@ public class CreateEventFragment extends Fragment implements View.OnClickListene
     EditText eventNameTxt;
     Button searchBtn;
     Button addEventBtn;
+    Button inviteFriendBtn;
     int PLACE_PICKER_REQUEST = 1;
     private Double lat, lng;
-    private DatabaseReference dbEvent;
+    private DatabaseReference db;
+
     private Event event;
 
     public void init()
@@ -51,11 +56,14 @@ public class CreateEventFragment extends Fragment implements View.OnClickListene
         locationTxt = (EditText) getActivity().findViewById(R.id.locationTxtId);
         eventNameTxt = (EditText) getActivity().findViewById(R.id.eventName);
         searchBtn = (Button) getActivity().findViewById(R.id.searchBtnId);
-        dbEvent = FirebaseDatabase.getInstance().getReference();
+        db = FirebaseDatabase.getInstance().getReference();
         addEventBtn = (Button) getActivity().findViewById(R.id.addEventBtnId);
+        inviteFriendBtn = (Button) getActivity().findViewById(R.id.inviteFriendBtnId);
+
         //setListener
         searchBtn.setOnClickListener(this);
         addEventBtn.setOnClickListener(this);
+        inviteFriendBtn.setOnClickListener(this);
     }
 
 
@@ -99,6 +107,10 @@ public class CreateEventFragment extends Fragment implements View.OnClickListene
                 Toast.makeText(getContext(), "Add Event Error", Toast.LENGTH_SHORT).show();
 
         }
+        else if(v == inviteFriendBtn){
+            Toast.makeText(getContext(), "invite Friend", Toast.LENGTH_SHORT).show();
+            //String = db.child("friendList").
+        }
     }
 
     @Override
@@ -116,13 +128,15 @@ public class CreateEventFragment extends Fragment implements View.OnClickListene
 
     private void addCurrentEvent(String eventName, Double lat, Double lng, String creator){
         try{
-            String key = dbEvent.child("events").push().getKey();
+            String key = db.child("events").push().getKey();
             event = new Event(eventName, lat, lng, creator);
-            dbEvent.child("events").child(key).setValue(event);
+            db.child("events").child(key).setValue(event);
         }catch(Exception e){
             Toast.makeText(getContext(), e.toString(), Toast.LENGTH_SHORT).show();}
 
     }
+
+
 
     private void inviteFriend(){
 
