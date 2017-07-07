@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ABGVApplication</string>
+    <string name="app_name">Sportastig</string>
     <string name="facebook_app_id">310833302676062</string>
     <string name="title_activity_user_navigation">UserNavigationActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>

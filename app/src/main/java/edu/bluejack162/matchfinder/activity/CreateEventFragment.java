@@ -10,9 +10,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -23,8 +25,11 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import edu.bluejack162.matchfinder.R;
+import edu.bluejack162.matchfinder.model.Event;
 
 
 /**
@@ -33,16 +38,24 @@ import edu.bluejack162.matchfinder.R;
 public class CreateEventFragment extends Fragment implements View.OnClickListener{
 
     EditText locationTxt;
+    EditText eventNameTxt;
     Button searchBtn;
+    Button addEventBtn;
     int PLACE_PICKER_REQUEST = 1;
+    private Double lat, lng;
+    private DatabaseReference dbEvent;
+    private Event event;
 
     public void init()
     {
         locationTxt = (EditText) getActivity().findViewById(R.id.locationTxtId);
+        eventNameTxt = (EditText) getActivity().findViewById(R.id.eventName);
         searchBtn = (Button) getActivity().findViewById(R.id.searchBtnId);
-
+        dbEvent = FirebaseDatabase.getInstance().getReference();
+        addEventBtn = (Button) getActivity().findViewById(R.id.addEventBtnId);
         //setListener
         searchBtn.setOnClickListener(this);
+        addEventBtn.setOnClickListener(this);
     }
 
 
@@ -77,14 +90,41 @@ public class CreateEventFragment extends Fragment implements View.OnClickListene
                 e.printStackTrace();
             }
         }
+        else if(v == addEventBtn){
+            if(!eventNameTxt.getText().toString().equals("") && !locationTxt.getText().toString().equals("")){
+                addCurrentEvent(eventNameTxt.getText().toString(), lat, lng, LoginActivity.getUserKey().toString());
+                Toast.makeText(getContext(), "Adding event", Toast.LENGTH_SHORT).show();
+            }
+            else
+                Toast.makeText(getContext(), "Add Event Error", Toast.LENGTH_SHORT).show();
+
+        }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode ==PLACE_PICKER_REQUEST)
+        if(requestCode == PLACE_PICKER_REQUEST)
         {
             Place place = PlacePicker.getPlace(data, getActivity());
             locationTxt.setText(place.getName());
+            //Latitude Longitude
+            lat =  place.getLatLng().latitude;
+            lng = place.getLatLng().longitude;
+            Toast.makeText(getContext(), "Lat : "+lat+" Lng : "+lng, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void addCurrentEvent(String eventName, Double lat, Double lng, String creator){
+        try{
+            String key = dbEvent.child("events").push().getKey();
+            event = new Event(eventName, lat, lng, creator);
+            dbEvent.child("events").child(key).setValue(event);
+        }catch(Exception e){
+            Toast.makeText(getContext(), e.toString(), Toast.LENGTH_SHORT).show();}
+
+    }
+
+    private void inviteFriend(){
+
     }
 }

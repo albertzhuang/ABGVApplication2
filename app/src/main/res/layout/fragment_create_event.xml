@@ -4,18 +4,27 @@
     android:layout_height="match_parent"
     tools:context="edu.bluejack162.matchfinder.activity.CreateEventFragment">
 
+    <EditText
+        android:id="@+id/eventName"
+        android:layout_width="315dp"
+        android:layout_height="wrap_content"
+        android:hint="Event's Name"
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="18dp"
+        android:layout_above="@+id/searchBtnId"
+        android:layout_alignStart="@+id/locationTxtId" />
 
     <EditText
         android:id="@+id/locationTxtId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="23dp"
-        android:layout_marginTop="29dp"
+        android:layout_marginTop="120dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:hint="Location"/>
+        android:hint="Location"
+        android:layout_marginStart="22dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
 
     <Button
         android:id="@+id/searchBtnId"
@@ -25,4 +34,22 @@
         android:layout_alignTop="@+id/locationTxtId"
         android:layout_marginEnd="19dp"
         android:text="Search"/>
+
+    <Button
+        android:id="@+id/inviteFriendBtnId"
+        android:text="Invite Friends"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/searchBtnId"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="22dp" />
+
+    <Button
+        android:id="@+id/addEventBtnId"
+        android:text="Add Event"
+        android:layout_width="315dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/inviteFriendBtnId"
+        android:layout_alignStart="@+id/locationTxtId"
+        android:layout_marginTop="15dp" />
 </RelativeLayout>
