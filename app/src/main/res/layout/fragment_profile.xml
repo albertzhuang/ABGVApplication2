@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#f3f3f3">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profileImageId"
@@ -17,10 +18,11 @@
         android:text="Change Photo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="11dp"
         android:gravity="center"
-        android:layout_above="@+id/linearLayout"
-        android:layout_centerHorizontal="true"/>
+        android:layout_below="@+id/profileImageId"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="33dp"
+        android:textSize="22dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -39,7 +41,9 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="Email" />
+            android:text="Email"
+            android:background="@drawable/roundfill"
+            android:padding="8dp" />
 
         <EditText
             android:id="@+id/usernameTxtId"
@@ -47,7 +51,10 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="Username" />
+            android:text="Username"
+            android:background="@drawable/roundfill"
+            android:padding="8dp"
+            android:layout_marginTop="10dp"/>
 
 
 
@@ -55,24 +62,37 @@
         <Spinner
             android:id="@+id/genderSpinnerId"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:padding="15dp"
+            android:background="@drawable/roundfill"
+            android:popupBackground="@drawable/spinner_item"/>
         <Spinner
             android:id="@+id/favoriteSportSpinnerId"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:padding="15dp"
+            android:background="@drawable/roundfill"
+            android:popupBackground="@drawable/spinner_item"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
             <Button
                 android:id="@+id/updateBtnId"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="18dp"
                 android:text="Update"
+                android:enabled="false"
+                android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
-                android:layout_centerInParent="true"
-                android:enabled="false"/>
+                android:layout_marginBottom="17dp"
+                android:background="@drawable/round"
+                android:textColor="@color/colorFont"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp" />
         </RelativeLayout>
     </LinearLayout>
 

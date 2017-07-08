@@ -6,4 +6,5 @@
     <color name="colorBackground">#32445c</color>
     <color name="colorHeader">#94012a</color>
     <color name="colorFont">#f3f3f3</color>
+    <color name="colorBackgroundMain">#f3f3f3</color>
 </resources>

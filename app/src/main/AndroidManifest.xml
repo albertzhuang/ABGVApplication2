@@ -26,10 +26,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
 
-        <!-- Start Main Activity ! -->
-        <activity android:name=".MainActivity" />
-        <!-- End Main Activity ! -->
-
 
         <!-- Start Login Activity ! -->
         <activity android:name=".activity.LoginActivity">

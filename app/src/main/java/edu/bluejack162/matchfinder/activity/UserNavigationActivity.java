@@ -2,7 +2,12 @@ package edu.bluejack162.matchfinder.activity;
 
 
 import android.content.ClipData;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -12,16 +17,37 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
 
-import edu.bluejack162.matchfinder.ProfileFragment;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
+import java.io.InputStream;
+import java.net.URL;
+
+import de.hdodenhof.circleimageview.CircleImageView;
+import edu.bluejack162.matchfinder.fragment.CreateEventFragment;
+import edu.bluejack162.matchfinder.fragment.ProfileFragment;
 import edu.bluejack162.matchfinder.R;
+import edu.bluejack162.matchfinder.model.Users;
 
 public class UserNavigationActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     ClipData.Item friendIcon;
+    TextView usernameTxt,emailTxt;
+    Users userLogin;
+    CircleImageView profileImage;
+    DatabaseReference databaseReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +56,8 @@ public class UserNavigationActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Sportastig");
-
+        databaseReference = FirebaseDatabase.getInstance().getReference();
+        userLogin = new Users();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -38,7 +65,16 @@ public class UserNavigationActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
+
+
+
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        View navView = navigationView.getHeaderView(0);
+        usernameTxt = (TextView) navView.findViewById(R.id.navUsernameTxtId);
+        emailTxt = (TextView) navView.findViewById(R.id.navEmailtxtId);
+        profileImage = (CircleImageView) navView.findViewById(R.id.navProfileImageId);
+        checkSession();
+
         navigationView.setNavigationItemSelectedListener(this);
     }
 
@@ -116,8 +152,53 @@ public class UserNavigationActivity extends AppCompatActivity
         return true;
     }
 
-    public void init()
+    public void checkSession()
     {
+        SharedPreferences userSession = getSharedPreferences("userSession", Context.MODE_PRIVATE);
+        String username = userSession.getString("username","");
+        String email = userSession.getString("email","");
+        String profileImageString = userSession.getString("profileImage","");
+        userLogin.setEmail(email);
+        userLogin.setUsername(username);
+        userLogin.setProfileImage(profileImageString);
 
+        if(!username.equals("") || !email.equals("") || !profileImageString.equals(""))
+        {
+            usernameTxt.setText(userLogin.getUsername());
+            emailTxt.setText(userLogin.getEmail());
+            new DownLoadImageTask(profileImage).execute(userLogin.getProfileImage());
+        }
+    }
+
+
+    private class DownLoadImageTask extends AsyncTask<String,Void,Bitmap> {
+        CircleImageView imageView;
+
+        public DownLoadImageTask(CircleImageView imageView) {
+            this.imageView = imageView;
+        }
+
+        /*
+            doInBackground(Params... params)
+                Override this method to perform a computation on a background thread.
+         */
+        protected Bitmap doInBackground(String... urls) {
+            String urldisplay = urls[0];
+            Bitmap mIcon11 = null;
+            try {
+                InputStream in = new java.net.URL(urldisplay).openStream();
+                mIcon11 = BitmapFactory.decodeStream((InputStream) new URL(urldisplay).getContent());
+            } catch (Exception e) {
+                Log.e("Error", e.getMessage());
+                e.printStackTrace();
+            }
+            return mIcon11;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap result) {
+            super.onPostExecute(result);
+            imageView.setImageBitmap(result);
+        }
     }
 }

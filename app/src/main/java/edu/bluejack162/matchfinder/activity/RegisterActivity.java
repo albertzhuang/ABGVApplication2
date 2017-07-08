@@ -24,7 +24,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     FirebaseAuth fireBaseAuth;
 
     DatabaseReference dataBaseReference;
-
+    String imageUrl;
     Users user;
 
     @Override
@@ -67,12 +67,20 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             }
             else
             {
-                String id =dataBaseReference.push().getKey();
-                user = new Users(username,email,password,"","","");
-                dataBaseReference.child("users").child(id).setValue(user);
-                Intent intent = new Intent(getApplicationContext(),LoginActivity.class);
-                Toast.makeText(this, "Register Success", Toast.LENGTH_SHORT).show();
-                startActivity(intent);
+                if(!email.contains("@") || !email.contains(".com"))
+                {
+                    Toast.makeText(this, "Email not valid", Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    String id = dataBaseReference.push().getKey();
+                    imageUrl = "http://www.freeiconspng.com/uploads/account-icon-8.png";
+                    user = new Users(username, email, password, imageUrl, "", "");
+                    dataBaseReference.child("users").child(id).setValue(user);
+                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                    Toast.makeText(this, "Register Success", Toast.LENGTH_SHORT).show();
+                    startActivity(intent);
+                }
             }
         }
     }
