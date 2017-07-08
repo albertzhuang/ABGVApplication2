@@ -19,3 +19,4 @@ app/src/main/res/layout/fragment_create_event.xml
 app/src/main/java/edu/bluejack162/matchfinder/ProfileFragment.java
 app/src/main/res/layout/fragment_profile.xml
 *.xml
+app/src/main/java/edu/bluejack162/matchfinder/activity/CreateEventFragment.java
