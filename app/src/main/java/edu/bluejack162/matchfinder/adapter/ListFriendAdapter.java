@@ -150,7 +150,4 @@ public class ListFriendAdapter extends BaseAdapter{
             imageView.setImageBitmap(result);
         }
     }
-
-
-
 }

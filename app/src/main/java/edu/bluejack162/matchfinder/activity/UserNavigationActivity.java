@@ -84,7 +84,10 @@ public class UserNavigationActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
         }
     }
 
@@ -120,11 +123,16 @@ public class UserNavigationActivity extends AppCompatActivity
         Fragment fragment = null;
         switch(id)
         {
-            case R.id.nav_menu_profile :
+            case R.id.nav_profile :
                 fragment = new ProfileFragment();
                 break;
-            case R.id.nav_menu_create_event:
+            case R.id.nav_event:
                 fragment = new CreateEventFragment();
+                break;
+            case R.id.nav_logout:
+                clearSession();
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(intent);
                 break;
         }
 
@@ -137,6 +145,9 @@ public class UserNavigationActivity extends AppCompatActivity
         DrawerLayout drawer =  (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
     }
+
+
+
 
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -162,12 +173,25 @@ public class UserNavigationActivity extends AppCompatActivity
         userLogin.setUsername(username);
         userLogin.setProfileImage(profileImageString);
 
-        if(!username.equals("") || !email.equals("") || !profileImageString.equals(""))
+        if(!username.equals("") || !email.equals(""))
         {
             usernameTxt.setText(userLogin.getUsername());
             emailTxt.setText(userLogin.getEmail());
             new DownLoadImageTask(profileImage).execute(userLogin.getProfileImage());
         }
+        else
+        {
+            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+            startActivity(intent);
+        }
+    }
+
+    public void clearSession()
+    {
+        SharedPreferences userSession = getSharedPreferences("userSession", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor =  userSession.edit();
+        editor.clear();
+        editor.apply();
     }
 
 
@@ -201,4 +225,5 @@ public class UserNavigationActivity extends AppCompatActivity
             imageView.setImageBitmap(result);
         }
     }
+
 }

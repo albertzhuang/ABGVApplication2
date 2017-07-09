@@ -1,5 +1,6 @@
 package edu.bluejack162.matchfinder.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
@@ -106,6 +107,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_login);
+        checkSession();
         init();
 
         // Configure Google Sign In
@@ -375,7 +377,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             Profile profile = Profile.getCurrentProfile();
                             String id = profile.getId();
                             final String link = profile.getLinkUri().toString();
-                            Toast.makeText(LoginActivity.this,"Link :  " +link, Toast.LENGTH_SHORT).show();
+
                             Log.i("Link",link);
                             if (Profile.getCurrentProfile()!=null)
                             {
@@ -452,4 +454,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
+    public void checkSession()
+    {
+        SharedPreferences userSession = getSharedPreferences("userSession", Context.MODE_PRIVATE);
+        String username = userSession.getString("username","");
+        String email = userSession.getString("email","");
+        String profileImageString = userSession.getString("profileImage","");
+
+
+        if(!username.equals("") && !email.equals(""))
+        {
+            Intent intent = new Intent(getApplicationContext(), UserNavigationActivity.class);
+            startActivity(intent);
+        }
+    }
 }

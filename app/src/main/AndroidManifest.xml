@@ -39,7 +39,7 @@
 
 
         <!-- Start Register Activity ! -->
-        <activity android:name=".activity.RegisterActivity" />
+        <activity android:name=".activity.RegisterActivity"></activity>
         <!-- End Register Activity ! -->
 
         <activity

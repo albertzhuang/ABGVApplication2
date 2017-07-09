@@ -65,16 +65,14 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:padding="15dp"
-            android:background="@drawable/roundfill"
-            android:popupBackground="@drawable/spinner_item"/>
+            android:background="@drawable/roundfill" />
         <Spinner
             android:id="@+id/favoriteSportSpinnerId"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:padding="15dp"
-            android:background="@drawable/roundfill"
-            android:popupBackground="@drawable/spinner_item"/>
+            android:background="@drawable/roundfill"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
