@@ -2,7 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="edu.bluejack162.matchfinder.fragment.CreateEventFragment">
+    tools:context="edu.bluejack162.matchfinder.fragment.CreateEventFragment"
+    android:background="#f3f3f3">
 
     <EditText
         android:id="@+id/eventName"
