@@ -26,7 +26,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
 
-
         <!-- Start Login Activity ! -->
         <activity android:name=".activity.LoginActivity">
             <intent-filter>
@@ -39,7 +38,7 @@
 
 
         <!-- Start Register Activity ! -->
-        <activity android:name=".activity.RegisterActivity"></activity>
+        <activity android:name=".activity.RegisterActivity" />
         <!-- End Register Activity ! -->
 
         <activity
@@ -70,7 +69,8 @@
             android:name=".TestActivity"
             android:label="@string/title_activity_test"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.AddFriendActivity"></activity>
+        <activity android:name=".activity.AddFriendActivity" />
+        <activity android:name=".FriendActivity"></activity>
     </application>
 
 </manifest>

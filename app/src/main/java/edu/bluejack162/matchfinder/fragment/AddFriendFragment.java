@@ -110,8 +110,12 @@ public class AddFriendFragment extends Fragment implements View.OnKeyListener, V
     {
         int flag = 0;
         index = 0;
-        if(userLoginId.equals(username))
+        Toast.makeText(getActivity().getApplicationContext(), Integer.toString(users.size()), Toast.LENGTH_SHORT).show();
+        if(userLogin.getUsername().equals(username))
         {
+            addBtn.setVisibility(View.INVISIBLE);
+            profileImage.setVisibility(View.INVISIBLE);
+            usernameTxt.setVisibility(View.VISIBLE);
             usernameTxt.setText("User Not Found");
         }
         else
@@ -231,21 +235,14 @@ public class AddFriendFragment extends Fragment implements View.OnKeyListener, V
         });
     }
 
-    public void addFriendById(String userId)
+    public void addFriendById(int index)
     {
-        for(int i=0;i<users.size();i++)
-        {
-            if(users.get(i).getUserId().equals(userId))
-            {
-                String id = databaseReference.push().getKey();
-                Friend friend = new Friend(userLogin.getUserId(),users.get(i).getUserId(),users.get(i).getUsername(),users.get(i).getProfileImage());
-                databaseReference.child("friend").child(id).setValue(friend);
-                users.remove(i);
-                userListView.setAdapter(null);
-                selectAfterAddIcon();
-                break;
-            }
-        }
+        String id = databaseReference.push().getKey();
+        Friend friend = new Friend(userLogin.getUserId(),users.get(index).getUserId(),users.get(index).getUsername(),users.get(index).getProfileImage());
+        databaseReference.child("friend").child(id).setValue(friend);
+        users.remove(index);
+        userListView.setAdapter(null);
+        selectAfterAddIcon();
     }
 
     public void selectAfterAddIcon()
@@ -261,46 +258,56 @@ public class AddFriendFragment extends Fragment implements View.OnKeyListener, V
     public void selectByUserAndFriend()
     {
         count = 0;
-        final Query queryFriend = databaseReference.child("friend").orderByChild("userAddId").equalTo(userLogin.getUserId());
-        queryFriend.addListenerForSingleValueEvent(new ValueEventListener() {
+        final Query queryUser = databaseReference.child("users");
+        queryUser.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.getChildrenCount() < 1)
+                if (dataSnapshot.getChildrenCount() < 1)
                 {
-                    Toast.makeText(getActivity().getApplicationContext(), "Friend Empty", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity().getApplicationContext(), "User Empty", Toast.LENGTH_SHORT).show();
                 }
                 else
                 {
-                    for(DataSnapshot friendSnapShot : dataSnapshot.getChildren()) {
 
-                        final Friend friend = friendSnapShot.getValue(Friend.class);
-                        friends.add(friend);
-                        final Query queryUser = databaseReference.child("users");
-                        queryUser.addListenerForSingleValueEvent(new ValueEventListener() {
+                    for (DataSnapshot userSnapShot : dataSnapshot.getChildren())
+                    {
+                        final Users user = userSnapShot.getValue(Users.class);
+                        user.setUserId(userSnapShot.getKey());
+                        users.add(user);
+
+                        final Query queryFriend = databaseReference.child("friend").orderByChild("userAddId").equalTo(userLogin.getUserId());
+                        queryFriend.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                if (dataSnapshot.getChildrenCount() < 1) {
+                                if(dataSnapshot.getChildrenCount()< 1)
+                                {
                                     Toast.makeText(getActivity().getApplicationContext(), "Friend Empty", Toast.LENGTH_SHORT).show();
-                                } else {
-                                    for (DataSnapshot userSnapShot : dataSnapshot.getChildren()) {
-                                        if (count == 0) {
-                                            Users user = userSnapShot.getValue(Users.class);
-                                            user.setUserId(userSnapShot.getKey());
-                                            users.add(user);
+                                }
+                                else
+                                {
+                                    //Toast.makeText(getActivity().getApplicationContext(),"count : " +Integer.toString(count), Toast.LENGTH_SHORT).show();
+                                    for (DataSnapshot friendSnapShot : dataSnapshot.getChildren())
+                                    {
+                                        if(count == 0)
+                                        {
+                                            Friend friend = friendSnapShot.getValue(Friend.class);
+                                            friends.add(friend);
                                         }
                                     }
+                                   /* if(count == 0) {
+                                    Toast.makeText(getActivity().getApplicationContext(), Integer.toString(friends.size()), Toast.LENGTH_SHORT).show();
+                                 }*/
                                     if(count == 0)
                                     {
-                                        for(int i=0;i<friends.size();i++)
-                                        {
-                                            for(int j=0;j<users.size();j++)
-                                            {
-                                                if(friends.get(i).getFriendId().equals(users.get(j).getUserId()))
-                                                {
+                                        for (int i = 0; i < friends.size(); i++) {
+                                            for (int j = 0; j < users.size(); j++) {
+                                                if (friends.get(i).getFriendId().equals(users.get(j).getUserId())) {
                                                     users.remove(j);
+                                                    break;
                                                 }
                                             }
                                         }
+
                                         //setToListVIew
                                         ListUserAdapter listUserAdapter = new ListUserAdapter(getActivity().getApplicationContext());
                                         for(int i=0;i<users.size();i++)
@@ -309,7 +316,8 @@ public class AddFriendFragment extends Fragment implements View.OnKeyListener, V
                                             listUserAdapter.setCustomButtonListner(new ListFriendAdapter.customButtonListener() {
                                                 @Override
                                                 public void onButtonClickListner(int position, String value) {
-                                                    addFriendById(users.get(position).getUserId());
+                                                    Toast.makeText(getActivity().getApplicationContext(), Integer.toString(position), Toast.LENGTH_SHORT).show();
+                                                    addFriendById(position);
                                                 }
                                             });
                                         }
@@ -317,17 +325,29 @@ public class AddFriendFragment extends Fragment implements View.OnKeyListener, V
                                         userListView.setAdapter(listUserAdapter);
                                     }
                                     count++;
+                                    /*if(count == 0)
+                                    {
+                                        for (int i = 0; i < friends.size(); i++) {
+                                            for (int j = 0; j < users.size(); j++) {
+                                                if (friends.get(i).getFriendId().equals(users.get(j).getUserId())) {
+                                                    users.remove(j);
+                                                }
+                                            }
+                                        }
+                                    }*/
+
                                 }
                             }
-
                             @Override
                             public void onCancelled(DatabaseError databaseError) {
                                 Toast.makeText(getActivity().getApplicationContext(), "Cancelled", Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
+                    //Toast.makeText(getActivity().getApplicationContext(), Integer.toString(friends.size()), Toast.LENGTH_SHORT).show();
                 }
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Toast.makeText(getActivity().getApplicationContext(), "Cancelled", Toast.LENGTH_SHORT).show();
