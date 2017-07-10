@@ -25,7 +25,8 @@
             android:layout_weight="0.94"
             android:text="test"
             android:textAlignment="center"
-            android:textSize="32dp" />
+            android:textSize="32dp"
+            android:textColor="#000000"/>
 
         <ImageView
             android:id="@+id/rowIconDeleteFriendId"

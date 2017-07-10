@@ -42,7 +42,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Add Friend"
-        android:visibility="gone"
+        android:visibility="invisible"
         android:layout_alignBottom="@+id/relativeLayoutId"
         android:layout_centerHorizontal="true" />
 
@@ -55,7 +55,7 @@
         android:layout_marginBottom="13dp"
         android:text=""
         android:textSize="26dp"
-        android:visibility="gone"/>
+        android:visibility="invisible"/>
 
     <ListView
         android:id="@+id/friendListId"

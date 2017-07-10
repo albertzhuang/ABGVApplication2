@@ -35,6 +35,7 @@ import java.io.InputStream;
 import java.net.URL;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import edu.bluejack162.matchfinder.fragment.AddFriendFragment;
 import edu.bluejack162.matchfinder.fragment.CreateEventFragment;
 import edu.bluejack162.matchfinder.fragment.ProfileFragment;
 import edu.bluejack162.matchfinder.R;
@@ -128,6 +129,9 @@ public class UserNavigationActivity extends AppCompatActivity
                 break;
             case R.id.nav_event:
                 fragment = new CreateEventFragment();
+                break;
+            case R.id.nav_friend:
+                fragment = new AddFriendFragment();
                 break;
             case R.id.nav_logout:
                 clearSession();
