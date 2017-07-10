@@ -318,7 +318,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                         }
                                     }
                                     createSession(userId,userGoogle.getUsername(),userGoogle.getEmail(),userGoogle.getProfileImage());
-                                    LoginManager.getInstance().logOut();
+                                    //LoginManager.getInstance().logOut();
                                     Intent intent = new Intent(getApplicationContext(),UserNavigationActivity.class);
                                     startActivity(intent);
                                 }
